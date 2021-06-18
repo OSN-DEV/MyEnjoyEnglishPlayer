@@ -1,0 +1,14 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <BitmapImage x:Key="End" UriSource="end.png" />
+    <BitmapImage x:Key="Folder" UriSource="folder.png" />
+    <BitmapImage x:Key="Forward" UriSource="forward.png" />
+    <BitmapImage x:Key="Next" UriSource="next.png" />
+    <BitmapImage x:Key="Pause" UriSource="pause.png" />
+    <BitmapImage x:Key="Play" UriSource="play.png" />
+    <BitmapImage x:Key="Prev" UriSource="prev.png" />
+    <BitmapImage x:Key="Rewind" UriSource="rewind.png" />
+    <BitmapImage x:Key="Start" UriSource="start.png" />
+</ResourceDictionary>
