@@ -70,6 +70,8 @@
     <Compile Include="Data\PreferenceData.cs" />
     <Compile Include="Data\PreferenceDetailData.cs" />
     <Compile Include="Func\MediaPlayer.cs" />
+    <Compile Include="Repo\Data\AppSettingData.cs" />
+    <Compile Include="Repo\AppSettingDataRepo.cs" />
     <Compile Include="Repo\IPreferenceRepo.cs" />
     <Compile Include="Repo\PreferenceXmlRepo.cs" />
     <Compile Include="UseCase\IPreferenceUseCase.cs" />
