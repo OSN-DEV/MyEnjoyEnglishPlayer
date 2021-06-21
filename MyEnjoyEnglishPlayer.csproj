@@ -84,7 +84,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainWindow.xaml">
+    <Page Include="UI\Main\PlayerMainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -95,8 +95,8 @@
     <Compile Include="Component\IconButton.xaml.cs">
       <DependentUpon>IconButton.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
+    <Compile Include="UI\Main\PlayerMainWindow.xaml.cs">
+      <DependentUpon>PlayerMainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Res\ImageDefinition.xaml">
@@ -106,7 +106,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainWindowDesingViewModel.cs" />
-    <Compile Include="MainWindowViewModel.cs" />
+    <Compile Include="UI\Main\PlayerMainViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
