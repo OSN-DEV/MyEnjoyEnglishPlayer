@@ -1,16 +1,25 @@
-﻿using System.Collections.Generic;
+﻿using MyEnjoyEnglishPlayer.Data;
+using System.Collections.Generic;
 
-namespace MyEnjoyEnglishPlayer {
-    class MainWindowDesingViewModel {
-        public DummyProfile AppData { set; get; } = new DummyProfile();
+namespace MyEnjoyEnglishPlayer.UI.Main {
+    class PlayerMainDesignViewModel {
+        /// <summary>
+        /// MP3FieList
+        /// </summary>
+        public List<Mp3FileData> MP3FileList { set; get; } = new List<Mp3FileData> {
+                { new Mp3FileData(){ DisplayName="dddd" } },{ new Mp3FileData(){ DisplayName="dddd" } }
+            };
+
 
         public class DummyProfile {
+
+
             /// <summary>
             /// ファイルリスト
             /// </summary>
             public List<string> FileList { set; get; } = new List<string> {
-            { "ファイル１" },{ "ファイル２" }
-        };
+                { "ファイル１" },{ "ファイル２" }
+            };
 
             /// <summary>
             /// 現在再生中のファイル名
@@ -42,5 +51,12 @@ namespace MyEnjoyEnglishPlayer {
             /// </summary>
             public bool IsFileSet { get; set; } = false;
         }
+
+
+
+
+        public DummyProfile AppData { set; get; } = new DummyProfile();
+
+
     }
 }

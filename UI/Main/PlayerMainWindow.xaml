@@ -4,11 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:c="clr-namespace:MyEnjoyEnglishPlayer.Component"
-        xmlns:local="clr-namespace:MyEnjoyEnglishPlayer"
+        xmlns:local="clr-namespace:MyEnjoyEnglishPlayer.UI.Main"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
         mc:Ignorable="d"
-        d:DataContext="{d:DesignInstance {x:Type local:MainWindowDesingViewModel},IsDesignTimeCreatable=True}"
-        Title="Enjoy English Player" Height="400" Width="250" WindowStartupLocation="Manual" ResizeMode="NoResize">
+        d:DataContext="{d:DesignInstance {x:Type local:PlayerMainDesignViewModel},IsDesignTimeCreatable=True}"
+        Title="Enjoy English Player" Height="400" Width="500" MinWidth="500" WindowStartupLocation="Manual">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -24,10 +24,64 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto" MinHeight="97"/>
+            <RowDefinition Height="35"/>
         </Grid.RowDefinitions>
-        <ListView Name="cData" Grid.Row="0" Padding="0" ItemsSource="{Binding AppData.FileList}" SelectionMode="Single" MouseDoubleClick="cData_MouseDoubleClick" >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition MinWidth="150"/>
+            <ColumnDefinition Width="2" />
+            <ColumnDefinition MinWidth="350"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- MP3ファイル一覧 -->
+        <ListView Grid.Row="0" Grid.Column="0" Grid.RowSpan ="2" BorderBrush="Beige" SelectionMode="Single" ItemsSource="{Binding MP3FileList}" SelectedIndex="{Binding CurrentIndex}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock Text="{Binding}" VerticalAlignment="Center" Padding="5" FontSize="12"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            <ListView.ItemContainerStyle >
+                <Style TargetType="ListViewItem" >
+                    <Setter Property="OverridesDefaultStyle" Value="True"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ContentControl}">
+                                <Border BorderBrush="Transparent" BorderThickness="1" Background="{TemplateBinding Background}">
+                                    <ContentPresenter />
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True" >
+                            <Setter Property="Background" Value="#FFE6E0E0" />
+                            <Setter Property="BorderBrush" Value="#FFE6E0E0" />
+                            <Setter Property="Foreground" Value="#333333" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True" >
+                            <Setter Property="Cursor" Value="Hand" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ListView>
+
+        <!-- MP3ファイル一覧 操作パネル -->
+        <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="41,0,41,5" Height="24" Width="68" >
+            <c:IconButton IconImage="{StaticResource Directory}" MyCommand="{Binding WathcedDirectorySelectCommand}"/>
+            <Label Width="20" />
+            <c:IconButton IconImage="{StaticResource Refresh}" MyCommand="{Binding RefreshMP3FieListCommand}"/>
+        </StackPanel>
+
+
+        <!-- スプリッター -->
+        <GridSplitter Grid.Row="0" Grid.Column="1" Width="2" HorizontalAlignment="Center" Grid.RowSpan="3" />
+        
+
+        <ListView Name="cData" Grid.Row="0" Grid.Column="2" Padding="0" ItemsSource="{Binding AppData.FileList}" SelectionMode="Single" MouseDoubleClick="cData_MouseDoubleClick" >
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
@@ -38,15 +92,15 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        
-        <StackPanel Background="#222A8E" Orientation="Vertical" Grid.Row="1">
+
+        <StackPanel Background="#222A8E" Orientation="Vertical" Grid.Row="1" Grid.Column="2" Grid.RowSpan="2">
             <Grid Margin="10,5,10,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="{Binding AppData.CurrentFile}" DockPanel.Dock="Left"/>
-                <c:IconButton  Grid.Column="1" IconImage="{StaticResource Folder}" DockPanel.Dock="Right" MyCommand="{Binding FolderSelectCommand}"/>
+                <c:IconButton  Grid.Column="1" IconImage="{StaticResource Directory}" DockPanel.Dock="Right" MyCommand="{Binding FolderSelectCommand}"/>
             </Grid>
             <Grid Margin="10,5,10,0" IsEnabled="{Binding AppData.IsFileSet}">
                 <Grid.ColumnDefinitions>

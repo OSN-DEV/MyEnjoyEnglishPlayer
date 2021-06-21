@@ -20,7 +20,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\Debug\1\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -40,6 +40,9 @@
   <ItemGroup>
     <Reference Include="OsnCsLib.Common">
       <HintPath>Libs\OsnCsLib.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="OsnCsLib.File">
+      <HintPath>Libs\OsnCsLib.File.dll</HintPath>
     </Reference>
     <Reference Include="OsnCsLib.WPFComponent">
       <HintPath>Libs\OsnCsLib.WPFComponent.dll</HintPath>
@@ -66,7 +69,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AppCommon\Constants.cs" />
+    <Compile Include="Component\FolderSelectDialog.cs" />
     <Compile Include="Data\KeyPair.cs" />
+    <Compile Include="Data\Mp3FileData.cs" />
     <Compile Include="Data\PreferenceData.cs" />
     <Compile Include="Data\PreferenceDetailData.cs" />
     <Compile Include="Func\MediaPlayer.cs" />
@@ -105,7 +110,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MainWindowDesingViewModel.cs" />
+    <Compile Include="UI\Main\PlayerMainDesignViewModel.cs" />
     <Compile Include="UI\Main\PlayerMainViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -138,7 +143,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Res\end.png" />
-    <Resource Include="Res\folder.png" />
     <Resource Include="Res\forward.png" />
     <Resource Include="Res\next.png" />
     <Resource Include="Res\pause.png" />
@@ -146,9 +150,6 @@
     <Resource Include="Res\prev.png" />
     <Resource Include="Res\rewind.png" />
     <Resource Include="Res\start.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="start.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="icon.ico" />
@@ -163,6 +164,12 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Res\refresh.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Res\directory.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

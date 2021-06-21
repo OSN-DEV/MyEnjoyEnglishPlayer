@@ -9,20 +9,29 @@ using System.Windows;
 using System.Windows.Forms;
 using MyEnjoyEnglishPlayer.Repo;
 using MyEnjoyEnglishPlayer.Repo.Data;
-
+using OsnCsLib.File;
+using System.Collections.ObjectModel;
+using MyEnjoyEnglishPlayer.Component;
 
 namespace MyEnjoyEnglishPlayer.UI.Main {
     class PlayerMainViewModel : BaseBindable {
 
         #region Declaration
         private readonly PlayerMainWindow _window;
-        private readonly AppSettingDataRepo _repo;
+        private readonly AppSettingDataRepo _appSettingDataRepo;
         private MediaPlayer _player = new MediaPlayer();
         private bool _isDraggingThumb = false;
         private PreferenceDetailData _currentData;
         #endregion
 
         #region Public Property
+        /// <summary>
+        /// MP3ファイルリスト
+        /// </summary>
+        private readonly ObservableCollection<Mp3FileData> _mp3FileData = new ObservableCollection<Mp3FileData>();
+        public ObservableCollection<Mp3FileData> MP3FileList {
+            get { return this._mp3FileData; }
+        }
         /// <summary>
         /// Data
         /// </summary>
@@ -80,6 +89,20 @@ namespace MyEnjoyEnglishPlayer.UI.Main {
             get { return this._endPoint; }
         }
 
+        #endregion
+
+        #region Command
+        /// <summary>
+        /// 監視ディレクトリ選択
+        /// </summary>
+        public DelegateCommand WathcedDirectorySelectCommand { set; get; }
+
+        /// <summary>
+        /// MP3リスト更新
+        /// </summary>
+        public DelegateCommand RefreshMP3FieListCommand { set; get; }
+
+
         /// <summary>
         /// フォルダ選択コマンド
         /// </summary>
@@ -129,7 +152,7 @@ namespace MyEnjoyEnglishPlayer.UI.Main {
         #region Constructor
         public PlayerMainViewModel(PlayerMainWindow window, AppSettingDataRepo repo) {
             this._window = window;
-            this._repo = repo;
+            this._appSettingDataRepo = repo;
             this.Initialize();
         }
         #endregion
@@ -139,9 +162,9 @@ namespace MyEnjoyEnglishPlayer.UI.Main {
         /// アプリ終了時処理
         /// </summary>
         internal void AppClosing() {
-            this._repo.Data.X = this._window.Left;
-            this._repo.Data.Y = this._window.Top;
-            this._repo.Save();
+            this._appSettingDataRepo.Data.X = this._window.Left;
+            this._appSettingDataRepo.Data.Y = this._window.Top;
+            this._appSettingDataRepo.Save();
         }
 
         /// <summary>
@@ -193,6 +216,12 @@ namespace MyEnjoyEnglishPlayer.UI.Main {
         /// 初期処理
         /// </summary>
         private void Initialize() {
+            // assing command
+            this.WathcedDirectorySelectCommand = new DelegateCommand(WathcedDirectorySelectClick);
+            this.RefreshMP3FieListCommand = new DelegateCommand(RefreshMP3FieListClick);
+
+
+
             this.FolderSelectCommand = new DelegateCommand(FolderSelectClick);
             this.PrevCommand = new DelegateCommand(PrevClick);
             this.RewindCommand = new DelegateCommand(RewindClick);
@@ -207,17 +236,80 @@ namespace MyEnjoyEnglishPlayer.UI.Main {
             var asm = System.Reflection.Assembly.GetExecutingAssembly();
             this._window.Title = $"My Enjoy English Player({asm.GetName().Version})";
 
-            //
-            this._repo.Load();
-            OsnCsLib.Common.Util.SetWindowXPosition(this._window, this._repo.Data.X);
-            OsnCsLib.Common.Util.SetWindowYPosition(this._window, this._repo.Data.Y);
+            // 
+            this._appSettingDataRepo.Load();
+                
+            // set window position
+            OsnCsLib.Common.Util.SetWindowXPosition(this._window, this._appSettingDataRepo.Data.X);
+            OsnCsLib.Common.Util.SetWindowYPosition(this._window, this._appSettingDataRepo.Data.Y);
+            if (this._appSettingDataRepo.Data.X < 0 || this._appSettingDataRepo.Data.Y < 0) {
+                var screenWidth = SystemParameters.PrimaryScreenWidth;
+                var screenHeight = SystemParameters.PrimaryScreenHeight;
+                this._window.Left = (screenWidth / 2) - (_window.Width / 2);
+                this._window.Top = (screenHeight / 2) - (_window.Height / 2);
+            }
 
-            this.RefreshList();
+            // show mp3 list
+            this.ShowMp3FileList();
             
             //
             this._player.OnPrepared += PlayerOnPrepared;
             this._player.OnPositionChanged += PlayerOnPositionChanged;
         }
+
+
+        /// <summary>
+        /// 監視フォルダ選択ボタンクリック時処理
+        /// </summary>
+        private void WathcedDirectorySelectClick() {
+            var dialog = new FolderSelectDialog();
+            dialog.Title = "フォルダ選択";
+            dialog.Path = this._appSettingDataRepo.Data.WatchedDirectory;
+            if (dialog.ShowDialog(this._window)) {
+                this._appSettingDataRepo.Data.LastPlayedFile = "";
+                this._appSettingDataRepo.Data.WatchedDirectory = dialog.Path;
+                this._appSettingDataRepo.Save();
+                this.ShowMp3FileList();
+            }
+        }
+
+        /// <summary>
+        /// MP3ファイルリスト更新ボタンクリック時処理
+        /// </summary>
+        private void RefreshMP3FieListClick() {
+            this.ShowMp3FileList();
+        }
+
+        /// <summary>
+        /// MP3ファイルリストの描画を行う
+        /// </summary>
+        private void ShowMp3FileList() {
+            if (!Directory.Exists(this._appSettingDataRepo.Data.WatchedDirectory)) {
+                return;
+            }
+
+            this._mp3FileData.Clear();
+            if (Directory.Exists(this._appSettingDataRepo.Data.WatchedDirectory)) {
+                var files = Directory.GetFiles(this._appSettingDataRepo.Data.WatchedDirectory, "*.mp3");
+                foreach (var file in files) {
+                    var op = new FileOperator(file);
+                    var data = new Mp3FileData() {
+                        DisplayName = op.NameWithoutExtension,
+                        FilePath = file
+                    };
+                    this._mp3FileData.Add(data);
+                }
+            }
+        }
+
+
+
+
+
+
+
+
+
 
         /// <summary>
         /// フォルダ選択クリック
@@ -307,23 +399,7 @@ namespace MyEnjoyEnglishPlayer.UI.Main {
         /// リストの更新
         /// </summary>
         private void RefreshList() {
-            //var newList = new Dictionary<string, PreferenceDetailData>();
-            //if (Directory.Exists(this.AppData.ObserveFolder)) {
-            //    var files = Directory.GetFiles(this.AppData.ObserveFolder, "*.mp3");
-            //    foreach (var file in files) {
-            //        var data = new PreferenceDetailData();
-            //        var info = new FileInfo(file);
-            //        data.DisplayName = info.Name.Replace($"{info.Extension}", "");
-            //        data.FileName = info.FullName;
-            //        if (this.AppData.StartEndPoints.ContainsKey(data.DisplayName)) {
-            //            data.StartPoint = this.AppData.StartEndPoints[data.DisplayName].StartPoint;
-            //            data.EndPoint = this.AppData.StartEndPoints[data.DisplayName].EndPoint;
-            //        }
-            //        newList.Add(data.DisplayName, data);
-            //    }
-            //}
-            //this.AppData.StartEndPoints = newList;
-            //this._useCase.Save(this.AppData);
+
         }
         #endregion
 

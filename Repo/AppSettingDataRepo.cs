@@ -16,7 +16,7 @@ namespace MyEnjoyEnglishPlayer.Repo {
         /// データを読み込む
         /// </summary>
         internal void Load() {
-            if (System.IO.File.Exists(Constants.AppSettingDataFile)) {
+            if (System.IO.File.Exists(Constants.AppDataFile)) {
                 using (var reader = new StreamReader(Constants.AppDataFile, new UTF8Encoding(false))) {
                     var serializer = new System.Xml.Serialization.XmlSerializer(typeof(AppSettingData));
                     this.Data = (AppSettingData)serializer.Deserialize(reader);
@@ -32,11 +32,10 @@ namespace MyEnjoyEnglishPlayer.Repo {
         internal void Save() {
             using (var writer = new StreamWriter(Constants.AppDataFile, false, new UTF8Encoding(false))) {
                 var seralizer = new System.Xml.Serialization.XmlSerializer(typeof(AppSettingData));
-                seralizer.Serialize(writer, this);
+                seralizer.Serialize(writer, this.Data);
             }
         }
         #endregion
-
 
         #region Private Method
         #endregion

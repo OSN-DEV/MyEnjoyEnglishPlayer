@@ -2,8 +2,10 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                      xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
+    <BitmapImage x:Key="Directory" UriSource="directory.png" />
+    <BitmapImage x:Key="Refresh" UriSource="refresh.png" />
+    
     <BitmapImage x:Key="End" UriSource="end.png" />
-    <BitmapImage x:Key="Folder" UriSource="folder.png" />
     <BitmapImage x:Key="Forward" UriSource="forward.png" />
     <BitmapImage x:Key="Next" UriSource="next.png" />
     <BitmapImage x:Key="Pause" UriSource="pause.png" />
