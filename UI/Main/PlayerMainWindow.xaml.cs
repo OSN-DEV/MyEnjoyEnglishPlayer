@@ -4,22 +4,22 @@ using MyEnjoyEnglishPlayer.UseCase;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace MyEnjoyEnglishPlayer {
+namespace MyEnjoyEnglishPlayer.UI.Main {
 
     /// <summary>
     /// MainWindow
     /// </summary>
-    public partial class MainWindow : Window {
+    public partial class PlayerMainWindow : Window {
 
         #region Declaration
-        private readonly MainWindowViewModel _viewModel;
+        private readonly PlayerMainViewModel _viewModel;
         #endregion
 
         #region Constructor
-        public MainWindow() {
+        public PlayerMainWindow() {
             InitializeComponent();
 
-            this._viewModel = new MainWindowViewModel(this, new PreferenceUseCase(new PreferenceXmlRepo() ));
+            this._viewModel = new PlayerMainViewModel(this, new AppSettingDataRepo());
             this.DataContext = this._viewModel;
 
             this.Closing += (sender, e) => {

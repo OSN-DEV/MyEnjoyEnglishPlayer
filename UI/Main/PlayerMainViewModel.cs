@@ -7,14 +7,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Windows.Forms;
+using MyEnjoyEnglishPlayer.Repo;
+using MyEnjoyEnglishPlayer.Repo.Data;
 
 
-namespace MyEnjoyEnglishPlayer {
-    class MainWindowViewModel : BaseBindable {
+namespace MyEnjoyEnglishPlayer.UI.Main {
+    class PlayerMainViewModel : BaseBindable {
 
         #region Declaration
-        private readonly MainWindow _window;
-        private readonly IPreferenceUseCase _useCase;
+        private readonly PlayerMainWindow _window;
+        private readonly AppSettingDataRepo _repo;
         private MediaPlayer _player = new MediaPlayer();
         private bool _isDraggingThumb = false;
         private PreferenceDetailData _currentData;
@@ -24,7 +26,7 @@ namespace MyEnjoyEnglishPlayer {
         /// <summary>
         /// Data
         /// </summary>
-        public PreferenceData AppData { set; get; }
+//        public PreferenceData AppData { set; get; }
 
 
         public Visibility PlayButtonVIsiblity { 
@@ -125,9 +127,9 @@ namespace MyEnjoyEnglishPlayer {
         #endregion
 
         #region Constructor
-        public MainWindowViewModel(MainWindow window, IPreferenceUseCase useCase) {
+        public PlayerMainViewModel(PlayerMainWindow window, AppSettingDataRepo repo) {
             this._window = window;
-            this._useCase = useCase;
+            this._repo = repo;
             this.Initialize();
         }
         #endregion
@@ -137,22 +139,22 @@ namespace MyEnjoyEnglishPlayer {
         /// アプリ終了時処理
         /// </summary>
         internal void AppClosing() {
-            this.AppData.X = this._window.Left;
-            this.AppData.Y = this._window.Top;
-            this._useCase.Save(this.AppData);
+            this._repo.Data.X = this._window.Left;
+            this._repo.Data.Y = this._window.Top;
+            this._repo.Save();
         }
 
         /// <summary>
         /// リストダブルクリック
         /// </summary>
         internal void ListDoubleClick(string displayName) {
-            this._currentData = this.AppData.StartEndPoints[displayName];
-            this.AppData.CurrentFile = displayName;
-            this._player.Prepare(this._currentData.FileName);
-            this.StartPoint = this._currentData.StartPoint;
-            this.EndPoint = this._currentData.EndPoint;
-            this._player.CurrentPosition = this.StartPoint; 
-            this._player.Play();
+            //this._currentData = this.AppData.StartEndPoints[displayName];
+            //this.AppData.CurrentFile = displayName;
+            //this._player.Prepare(this._currentData.FileName);
+            //this.StartPoint = this._currentData.StartPoint;
+            //this.EndPoint = this._currentData.EndPoint;
+            //this._player.CurrentPosition = this.StartPoint; 
+            //this._player.Play();
         }
 
         internal void SliderChangedDragStart() {
@@ -206,14 +208,12 @@ namespace MyEnjoyEnglishPlayer {
             this._window.Title = $"My Enjoy English Player({asm.GetName().Version})";
 
             //
-            this.AppData = this._useCase.Load();
-            if (0 < this.AppData.X && 0 < this.AppData.X) {
-                this._window.Left = this.AppData.X;
-                this._window.Top = this.AppData.Y;
-            }
+            this._repo.Load();
+            OsnCsLib.Common.Util.SetWindowXPosition(this._window, this._repo.Data.X);
+            OsnCsLib.Common.Util.SetWindowYPosition(this._window, this._repo.Data.Y);
 
             this.RefreshList();
-
+            
             //
             this._player.OnPrepared += PlayerOnPrepared;
             this._player.OnPositionChanged += PlayerOnPositionChanged;
@@ -223,16 +223,16 @@ namespace MyEnjoyEnglishPlayer {
         /// フォルダ選択クリック
         /// </summary>
         private void FolderSelectClick() {
-            using (var dialog = new FolderBrowserDialog()) {
-                dialog.Description = "コンテンツを格納しているフォルダを選択してください。";
-                dialog.SelectedPath = this.AppData.ObserveFolder;
-                if (dialog.ShowDialog() != DialogResult.OK) {
-                    return;
-                }
-                this.AppData.CurrentFile = "";
-                this.AppData.ObserveFolder = dialog.SelectedPath;
-                this.RefreshList();
-            }
+            //using (var dialog = new FolderBrowserDialog()) {
+            //    dialog.Description = "コンテンツを格納しているフォルダを選択してください。";
+            //    dialog.SelectedPath = this.AppData.ObserveFolder;
+            //    if (dialog.ShowDialog() != DialogResult.OK) {
+            //        return;
+            //    }
+            //    this.AppData.CurrentFile = "";
+            //    this.AppData.ObserveFolder = dialog.SelectedPath;
+            //    this.RefreshList();
+            //}
         }
 
         /// <summary>
@@ -289,41 +289,41 @@ namespace MyEnjoyEnglishPlayer {
         /// 開始ポイントクリック
         /// </summary>
         private void StartPointClick() {
-            this._currentData.StartPoint = this._player.CurrentPosition;
-            this._useCase.Save(this.AppData);
-            this.StartPoint = this._currentData.StartPoint;
+            //this._currentData.StartPoint = this._player.CurrentPosition;
+            //this._useCase.Save(this.AppData);
+            //this.StartPoint = this._currentData.StartPoint;
         }
 
         /// <summary>
         /// 終了ポイントコマンド
         /// </summary>
         private void EndPointClick() {
-            this._currentData.EndPoint = this._player.CurrentPosition;
-            this._useCase.Save(this.AppData);
-            this.EndPoint = this._currentData.EndPoint;
+            //this._currentData.EndPoint = this._player.CurrentPosition;
+            //this._useCase.Save(this.AppData);
+            //this.EndPoint = this._currentData.EndPoint;
         }
 
         /// <summary>
         /// リストの更新
         /// </summary>
         private void RefreshList() {
-            var newList = new Dictionary<string, PreferenceDetailData>();
-            if (Directory.Exists(this.AppData.ObserveFolder)) {
-                var files = Directory.GetFiles(this.AppData.ObserveFolder, "*.mp3");
-                foreach (var file in files) {
-                    var data = new PreferenceDetailData();
-                    var info = new FileInfo(file);
-                    data.DisplayName = info.Name.Replace($"{info.Extension}", "");
-                    data.FileName = info.FullName;
-                    if (this.AppData.StartEndPoints.ContainsKey(data.DisplayName)) {
-                        data.StartPoint = this.AppData.StartEndPoints[data.DisplayName].StartPoint;
-                        data.EndPoint = this.AppData.StartEndPoints[data.DisplayName].EndPoint;
-                    }
-                    newList.Add(data.DisplayName, data);
-                }
-            }
-            this.AppData.StartEndPoints = newList;
-            this._useCase.Save(this.AppData);
+            //var newList = new Dictionary<string, PreferenceDetailData>();
+            //if (Directory.Exists(this.AppData.ObserveFolder)) {
+            //    var files = Directory.GetFiles(this.AppData.ObserveFolder, "*.mp3");
+            //    foreach (var file in files) {
+            //        var data = new PreferenceDetailData();
+            //        var info = new FileInfo(file);
+            //        data.DisplayName = info.Name.Replace($"{info.Extension}", "");
+            //        data.FileName = info.FullName;
+            //        if (this.AppData.StartEndPoints.ContainsKey(data.DisplayName)) {
+            //            data.StartPoint = this.AppData.StartEndPoints[data.DisplayName].StartPoint;
+            //            data.EndPoint = this.AppData.StartEndPoints[data.DisplayName].EndPoint;
+            //        }
+            //        newList.Add(data.DisplayName, data);
+            //    }
+            //}
+            //this.AppData.StartEndPoints = newList;
+            //this._useCase.Save(this.AppData);
         }
         #endregion
 
