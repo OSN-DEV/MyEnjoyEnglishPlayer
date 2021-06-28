@@ -69,7 +69,12 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AppCommon\Constants.cs" />
+    <Compile Include="AppCommon\TimeUtil.cs" />
+    <Compile Include="Component\CustomTextBox.cs" />
     <Compile Include="Component\FolderSelectDialog.cs" />
+    <Compile Include="Component\TimeStatusButton.xaml.cs">
+      <DependentUpon>TimeStatusButton.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Data\KeyPair.cs" />
     <Compile Include="Data\Mp3FileData.cs" />
     <Compile Include="Data\PreferenceData.cs" />
@@ -77,6 +82,7 @@
     <Compile Include="Func\MediaPlayer.cs" />
     <Compile Include="Repo\Data\AppSettingData.cs" />
     <Compile Include="Repo\AppSettingDataRepo.cs" />
+    <Compile Include="Repo\Data\Bookmark.cs" />
     <Compile Include="Repo\IPreferenceRepo.cs" />
     <Compile Include="Repo\PreferenceXmlRepo.cs" />
     <Compile Include="UseCase\IPreferenceUseCase.cs" />
@@ -86,6 +92,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Component\IconButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Component\TimeStatusButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

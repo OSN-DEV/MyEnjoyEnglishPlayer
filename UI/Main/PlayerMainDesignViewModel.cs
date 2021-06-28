@@ -1,14 +1,28 @@
 ﻿using MyEnjoyEnglishPlayer.Data;
+using MyEnjoyEnglishPlayer.Repo.Data;
 using System.Collections.Generic;
 
 namespace MyEnjoyEnglishPlayer.UI.Main {
     class PlayerMainDesignViewModel {
         /// <summary>
-        /// MP3FieList
+        /// MP3ファイルリスト
         /// </summary>
         public List<Mp3FileData> MP3FileList { set; get; } = new List<Mp3FileData> {
-                { new Mp3FileData(){ DisplayName="dddd" } },{ new Mp3FileData(){ DisplayName="dddd" } }
-            };
+            { new Mp3FileData(){ DisplayName="dddd" } },{ new Mp3FileData(){ DisplayName="dddd" } }
+        };
+
+        /// <summary>
+        /// ブックマークリスト
+        /// </summary>
+        public List<Bookmark> BookmarkList { set; get; } = new List<Bookmark> {
+            { new Bookmark() { Time = "00:30", TimeStatus = Bookmark.TimeState.Start, Title = "開始" } },
+            { new Bookmark() { Time = "01:30", TimeStatus = Bookmark.TimeState.None, Title = "中間" } },
+            { new Bookmark() { Time = "03:45", TimeStatus = Bookmark.TimeState.End, Title = "終了" } }
+        };
+
+
+
+
 
 
         public class DummyProfile {

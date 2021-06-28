@@ -16,7 +16,6 @@
         public string FilePath { set; get; }
         #endregion
 
-
         #region Public Method
         /// <summary>
         /// 

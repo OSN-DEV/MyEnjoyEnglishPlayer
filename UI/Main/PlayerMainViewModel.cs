@@ -32,6 +32,17 @@ namespace MyEnjoyEnglishPlayer.UI.Main {
         public ObservableCollection<Mp3FileData> MP3FileList {
             get { return this._mp3FileData; }
         }
+
+        /// <summary>
+        /// ブックマークリスト
+        /// </summary>
+        private readonly ObservableCollection<Bookmark> _bookmarklist = new ObservableCollection<Bookmark>();
+        public ObservableCollection<Bookmark> BookmarkList {
+            get { return this._bookmarklist; }
+        }
+
+
+
         /// <summary>
         /// Data
         /// </summary>
