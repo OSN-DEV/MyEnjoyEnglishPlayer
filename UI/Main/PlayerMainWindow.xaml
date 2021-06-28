@@ -8,7 +8,7 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance {x:Type local:PlayerMainDesignViewModel},IsDesignTimeCreatable=True}"
-        Title="Enjoy English Player" Height="400" Width="500" MinWidth="500" WindowStartupLocation="Manual">
+        Title="Enjoy English Player" Height="400" Width="500" MinWidth="500" WindowStartupLocation="Manual" ResizeMode="CanMinimize">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -29,9 +29,9 @@
             <RowDefinition Height="35"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition MinWidth="150"/>
+            <ColumnDefinition Width="150"/>
             <ColumnDefinition Width="2" />
-            <ColumnDefinition MinWidth="350"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <!-- MP3ファイル一覧 -->
@@ -76,13 +76,11 @@
             <c:IconButton IconImage="{StaticResource Refresh}" MyCommand="{Binding RefreshMP3FieListCommand}"/>
         </StackPanel>
 
-
         <!-- スプリッター -->
         <GridSplitter Grid.Row="0" Grid.Column="1" Width="2" HorizontalAlignment="Center" Grid.RowSpan="3" />
-        
 
         <!-- 再生位置情報 -->
-        <ListView Name="cData" Grid.Row="0" Grid.Column="2" Padding="0" ItemsSource="{Binding AppData.FileList}" SelectionMode="Single" MouseDoubleClick="cData_MouseDoubleClick" >
+        <!--<ListView Name="cData" Grid.Row="0" Grid.Column="2" Padding="0" ItemsSource="{Binding AppData.FileList}" SelectionMode="Single" MouseDoubleClick="cData_MouseDoubleClick" >
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
@@ -92,49 +90,46 @@
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
-        </ListView>
+        </ListView>-->
 
-        <ListView Grid.Row="0" Grid.Column="2" ItemsSource="{Binding BookmarkList}" SelectedIndex="{Binding CurrentIndex}" Margin="0,0,0,5" >
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel>
-                        <Grid Height="30" HorizontalAlignment="Stretch"  Background="#795548" Visibility="{Binding CategoryVisibility}" >
+        <DockPanel Grid.Row="0" Grid.Column="2" Margin="0">
+            <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Right">
+                <c:IconButton IconImage="{StaticResource Add}" DockPanel.Dock="Right" MyCommand="{Binding FolderSelectCommand}" Margin="0,0,10,0"/>
+            </StackPanel>
+
+            <ListView Grid.Row="0" BorderBrush="Beige" Grid.Column="2" Height="Auto" ItemsSource="{Binding BookmarkList}" SelectedIndex="{Binding CurrentIndex}" Margin="0,0,0,5" >
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Width="330">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="25" />
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="30" />
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="30" />
+                                <ColumnDefinition Width="30"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Foreground="White" Text="{Binding CategoryName}" Style="{StaticResource BasicTextBlock}" Margin="10,0,0,0" />
+                            <c:TimeTextBox Width="40" Text="{Binding Time}"/>
+                            <c:TimeStatusButton Grid.Column="1" Width="16" Height="16" TimeStatus="{Binding TimeStatus}" Margin="1,0,0,0" Tag="{Binding Id}" TimeStatusChanged ="ResultChanged" />
+                            <c:CustomTextBox Grid.Column="2" ImeMode="Hiragana" Text="{Binding Title}" Style="{StaticResource BaseTextBoxStyle}" TextValueChanged="TodoTextValueChanged" Tag="{Binding Id}"/>
 
-                            <c:IconButton IconImage="{StaticResource Add}" Width="20" Height="20" HorizontalAlignment="Right"
-                                        MyCommand="{Binding DataContext.AddLogCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                        MyCommandParam ="{Binding CategoryId}"/>
+                            <c:IconButton Grid.Column="3" IconImage="{StaticResource Edit}" Width="20" Height="20"  Margin="1,0"
+                                            MyCommand="{Binding DataContext.DeleteTodoCommand, 
+                                            RelativeSource={RelativeSource AncestorType=Window}}"
+                                            MyCommandParam ="{Binding Index}"/>
+                            
+                            <c:IconButton Grid.Column="4"
+                                IconImage="{StaticResource Delete}" Width="20" Height="20"  Margin="1,0"
+                                            MyCommand="{Binding DataContext.DeleteTodoCommand, 
+                                            RelativeSource={RelativeSource AncestorType=Window}}"
+                                            MyCommandParam ="{Binding Index}"/>
+
                         </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
 
-                        <StackPanel Orientation="Horizontal" Visibility="{Binding LogVisibility}">
-                            <c:TimeStatusButton Width="16" Height="16" TimeStatus="{Binding TimeStatus}" Margin="1,0,0,0" Tag="{Binding Id}" TimeStatusChanged ="ResultChanged" />
-                            <c:CustomTextBox ImeMode="Hiragana" Text="{Binding Todo}" Width="240" Style="{StaticResource BaseTextBoxStyle}" TextValueChanged="TodoTextValueChanged" Tag="{Binding Id}"/>
+            </ListView>
 
-                            <TextBlock Width="1"  Background="#EFEFEF" />
-
-                            <TextBlock Width="14"/>
-                            <TextBlock Width="1"  Background="#EFEFEF" />
-                            <TextBlock Width="14"/>
-
-
-                            <TextBlock Width="1"  Background="#EFEFEF" />
-                            <c:CustomTextBox ImeMode="Hiragana" Text="{Binding Memo}" Width="240" Style="{StaticResource BaseTextBoxStyle}" TextWrapping="Wrap" AcceptsReturn="True" MaxLines="3" TextValueChanged="MemoChanged"  Tag="{Binding Id}"/>
-
-                            <c:IconButton IconImage="{StaticResource DeleteTodo}" Width="20" Height="20"  Margin="1,0"
-                                          MyCommand="{Binding DataContext.DeleteTodoCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                          MyCommandParam ="{Binding Priority}"/>
-                        </StackPanel>
-                    </StackPanel>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-
-        </ListView>
-
-
+        </DockPanel>
 
 
 

@@ -55,6 +55,7 @@
         <Setter Property="Margin" Value="3,4" />
     </Style>
     <Style TargetType="local:CustomTextBox" BasedOn="{StaticResource BaseTextBoxStyle}" />
+    <Style TargetType="local:TimeTextBox" BasedOn="{StaticResource BaseTextBoxStyle}" />
 
 
 

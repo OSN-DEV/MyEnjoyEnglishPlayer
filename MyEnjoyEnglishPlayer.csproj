@@ -75,6 +75,7 @@
     <Compile Include="Component\TimeStatusButton.xaml.cs">
       <DependentUpon>TimeStatusButton.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Component\TimeTextBox.cs" />
     <Compile Include="Data\KeyPair.cs" />
     <Compile Include="Data\Mp3FileData.cs" />
     <Compile Include="Data\PreferenceData.cs" />
@@ -180,6 +181,15 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Res\directory.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Res\add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Res\delete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Res\edit.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

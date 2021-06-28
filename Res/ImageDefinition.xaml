@@ -4,6 +4,9 @@
 
     <BitmapImage x:Key="Directory" UriSource="directory.png" />
     <BitmapImage x:Key="Refresh" UriSource="refresh.png" />
+    <BitmapImage x:Key="Add" UriSource="add.png" />
+    <BitmapImage x:Key="Edit" UriSource="edit.png" />
+    <BitmapImage x:Key="Delete" UriSource="delete.png" />
     
     <BitmapImage x:Key="End" UriSource="end.png" />
     <BitmapImage x:Key="Forward" UriSource="forward.png" />
