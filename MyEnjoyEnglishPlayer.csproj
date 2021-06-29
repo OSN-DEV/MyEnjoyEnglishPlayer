@@ -81,6 +81,7 @@
     <Compile Include="Data\PreferenceData.cs" />
     <Compile Include="Data\PreferenceDetailData.cs" />
     <Compile Include="Func\MediaPlayer.cs" />
+    <Compile Include="Repo\BookmarkRepo.cs" />
     <Compile Include="Repo\Data\AppSettingData.cs" />
     <Compile Include="Repo\AppSettingDataRepo.cs" />
     <Compile Include="Repo\Data\Bookmark.cs" />
