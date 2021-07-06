@@ -2,12 +2,7 @@
 using MyEnjoyEnglishPlayer.Repo.Data;
 using OsnCsLib.File;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static MyEnjoyEnglishPlayer.Repo.Data.Bookmark;
 
 namespace MyEnjoyEnglishPlayer.Repo {
